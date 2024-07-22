@@ -12,6 +12,7 @@ const RESTAURANT = {
       name: 'Quantum Quinoa Mushroom Burger',
       price: 13.00,
       rating: 4,
+      category: 'mains',
       details: 'A vegetarian burger made with a quinoa and mushroom patty, it will take you to another realm.'
     },
     { 
@@ -19,6 +20,7 @@ const RESTAURANT = {
       name: 'Binary Berry Cheesecake',
       price: 10.11,
       rating: 3,
+      category: 'desserts',
       details: 'A creamy cheesecake bursting with flavor. A mix of berries in every byte.'
     },
     { 
@@ -26,6 +28,7 @@ const RESTAURANT = {
       name: 'Recursive Rigatoni',
       price: 17.00,
       rating: 5,
+      category: 'mains',
       details: 'A classic rigatoni pasta dish, layered with rich tomato sauce and herbs. You\'ll keep coming back for more.'
     },
     { 
@@ -33,6 +36,7 @@ const RESTAURANT = {
       name: 'Pumpkin Pi Squared',
       price: 3.14,
       rating: 5,
+      category: 'desserts',
       details: 'A delightful pumpkin dessert, squared and spiced to perfection.'
     },
     { 
@@ -40,12 +44,13 @@ const RESTAURANT = {
       name: 'Fibonacci String Bean Fries',
       price: 11.23,
       rating: 5,
+      category: 'sides',
       details: 'Crispy and lightly seasoned string bean fries, served in a pattern for a fun twist.'
     }
   ]
 };
 
-// Set view engine to EJS
+
 app.set('view engine', 'ejs');
 
 // Route to render the home page
@@ -53,9 +58,21 @@ app.get('/', (req, res) => {
   res.render('home', { restaurant: RESTAURANT });
 });
 
-// Route to render the menu page
+
 app.get('/menu', (req, res) => {
   res.render('menu', { menu: RESTAURANT.menu });
+});
+
+// Route to render category-specific menu pages
+app.get('/menu/:category', (req, res) => {
+  const category = req.params.category;
+  const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+  const menuItems = RESTAURANT.menu.filter(item => item.category === category);
+
+  res.render('category', {
+    menuItems: menuItems,
+    category: capitalizedCategory
+  });
 });
 
 // Start server
